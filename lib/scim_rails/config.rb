@@ -23,7 +23,17 @@ module ScimRails
       :user_attributes,
       :user_deprovision_method,
       :user_reprovision_method,
-      :user_schema
+      :user_schema,
+      :mutable_group_attributes,
+      :mutable_group_attributes_schema,
+      :queryable_group_attributes,
+      :scim_groups_list_order,
+      :scim_groups_model,
+      :scim_groups_scope,
+      :group_attributes,
+      :group_deprovision_method,
+      :group_reprovision_method,
+      :group_schema
       
     def initialize
       @basic_auth_model = "Company"

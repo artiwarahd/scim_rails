@@ -7,6 +7,8 @@ ScimRails.configure do |config|
 
   config.basic_auth_model_searchable_attribute = :subdomain
   config.basic_auth_model_authenticatable_attribute = :api_token
+
+  ### ---------- Users ---------- ###
   config.scim_users_scope = :users
   config.scim_users_list_order = :id
 
@@ -52,5 +54,30 @@ ScimRails.configure do |config|
       },
     ],
     active: :unarchived?
+  }
+
+  ### ---------- Groups ---------- ###
+  config.scim_groups_scope = :groups
+  config.scim_groups_list_order = :id
+
+  config.group_deprovision_method = :archive!
+  config.group_reprovision_method = :unarchive!
+
+  config.mutable_group_attributes = [
+    :displayName
+  ]
+
+  config.queryable_group_attributes = {
+    displayName: :display_name
+  }
+
+  config.mutable_group_attributes_schema = {
+    displayName: :display_name
+  }
+
+  config.group_schema = {
+    schemas: ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+    id: :id,
+    displayName: :display_name,
   }
 end
