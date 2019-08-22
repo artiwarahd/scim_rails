@@ -2,7 +2,7 @@ module ScimRails
   class ScimUsersController < ScimRails::ApplicationController
     def index
       if params[:filter].present?
-        query = ScimRails::ScimQueryParser.new(params[:filter])
+        query = ScimRails::ScimQueryParser.new("User", params[:filter])
 
         users = @company
           .public_send(ScimRails.config.scim_users_scope)

@@ -25,7 +25,7 @@ RSpec.describe ScimRails::ScimGroupsController, type: :request do
 
       post_request("application/scim+json")
 
-      expect(request.params).to include :name
+      expect(request.params).to include :displayName
       expect(response.status).to eq 201
       expect(response.content_type).to eq "application/scim+json"
       expect(company.groups.count).to eq 1
@@ -36,7 +36,7 @@ RSpec.describe ScimRails::ScimGroupsController, type: :request do
 
       post_request("invalid_type")
 
-      expect(request.params).not_to include :name
+      expect(request.params).not_to include :displayName
       expect(response.status).to eq 422
       expect(company.groups.count).to eq 0
     end

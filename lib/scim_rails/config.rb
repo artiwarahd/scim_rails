@@ -39,6 +39,7 @@ module ScimRails
       @basic_auth_model = "Company"
       @scim_users_list_order = :id
       @scim_users_model = "User"
+      @scim_groups_model = "Group"
       @user_schema = {}
       @user_attributes = []
       @group_schema = {}

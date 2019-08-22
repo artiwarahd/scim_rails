@@ -64,7 +64,7 @@ ScimRails.configure do |config|
   config.group_reprovision_method = :unarchive!
 
   config.mutable_group_attributes = [
-    :displayName
+    :display_name
   ]
 
   config.queryable_group_attributes = {
