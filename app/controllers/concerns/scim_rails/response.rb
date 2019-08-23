@@ -21,6 +21,11 @@ module ScimRails
           json: object_response(object),
           status: status,
           content_type: CONTENT_TYPE
+      when "destroy"
+        render \
+          nothing: true,
+          status: :no_content,
+          content_type: CONTENT_TYPE
       end
     end
 

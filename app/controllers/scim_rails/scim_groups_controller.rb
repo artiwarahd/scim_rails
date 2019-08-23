@@ -67,6 +67,13 @@ module ScimRails
       json_scim_response(object: group)
     end
 
+    def destroy
+      group = @company.public_send(ScimRails.config.scim_groups_scope).find(params[:id])
+      group.destroy
+
+      json_scim_response(object: nil)
+    end
+
     private
 
     def permitted_group_params

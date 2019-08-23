@@ -20,8 +20,8 @@ The goal of the Gem is to offer a relatively painless way of adding SCIM 2.0 to 
   * Update Group [Non-member attributes]
   * Update Group [Add Members]
   * Update Group [Remove Members]
-  * Delete Group **<< we're on this step**
-3. Support Microsoft Azure Active Directory Interface
+  * Delete Group
+3. Support Microsoft Azure Active Directory Interface **<< we're on this step**
 
 ## Installation
 
