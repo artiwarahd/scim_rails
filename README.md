@@ -17,7 +17,7 @@ The goal of the Gem is to offer a relatively painless way of adding SCIM 2.0 to 
   * Create Group
   * Get Group
   * Get Group by displayName
-  * Update Group [Non-member attributes] << we're on this step
+  * Update Group [Non-member attributes] **<< we're on this step**
   * Update Group [Add Members]
   * Update Group [Remove Members]
   * Delete Group
