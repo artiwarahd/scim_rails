@@ -89,4 +89,29 @@ ScimRails.configure do |config|
     ],
     active: :active?
   }
+
+  ### ---------- Groups ---------- ###
+  config.scim_groups_scope = :groups
+  config.scim_groups_list_order = :id
+
+  config.group_add_members_method = :add_members!
+  config.group_remove_members_method = :remove_members!
+
+  config.mutable_group_attributes = [
+    :display_name
+  ]
+
+  config.queryable_group_attributes = {
+    displayName: :display_name
+  }
+
+  config.mutable_group_attributes_schema = {
+    displayName: :display_name
+  }
+
+  config.group_schema = {
+    schemas: ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+    id: :id,
+    displayName: :display_name,
+  }
 end
