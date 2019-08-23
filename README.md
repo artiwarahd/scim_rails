@@ -16,10 +16,10 @@ The goal of the Gem is to offer a relatively painless way of adding SCIM 2.0 to 
 2. Add Group Operations
   * Create Group
   * Get Group
-  * Get Group by displayName
+  * Get Group by displayNamee
   * Update Group [Non-member attributes]
-  * Update Group [Add Members] **<< we're on this step**
-  * Update Group [Remove Members]
+  * Update Group [Add Members]
+  * Update Group [Remove Members] **<< we're on this step**
   * Delete Group
 3. Support Microsoft Azure Active Directory Interface
 
