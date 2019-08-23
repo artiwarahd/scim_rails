@@ -12,4 +12,12 @@ class Group < ApplicationRecord
   def members
     self.users
   end
+
+  def add_members!(member_ids)
+    self.users = self.users | User.find(member_ids)
+  end
+
+  def remove_members!(member_ids)
+    # self.users = self.users - User.find(member_ids)
+  end
 end

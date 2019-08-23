@@ -54,7 +54,16 @@ module ScimRails
     # - Update Group [Remove Members]
     def patch_update
       group = @company.public_send(ScimRails.config.scim_groups_scope).find(params[:id])
-      update_display_name(group) if patch_display_name_param.present?
+
+      case patch_operation
+      when "replace"
+        update_display_name(group) if patch_display_name_param.present?
+      when "add"
+        add_members(group) if members_param.present?
+      when "remove"
+        remove_members(group) if members_param.present?
+      end
+
       json_scim_response(object: group)
     end
 
@@ -102,10 +111,28 @@ module ScimRails
       group.update!(display_name: patch_display_name_param)
     end
 
+    def add_members(group)
+      group.public_send(ScimRails.config.group_add_members_method, members_param)
+    end
+
+    def remove_members(group)
+      group.public_send(ScimRails.config.group_add_members_method, members_param)
+    end
+
+    def patch_operation
+      operation = params.dig("Operations", 0, "op")
+    end
+
     def patch_display_name_param
       displayName = params.dig("Operations", 0, "value", "displayName")
       raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if displayName.nil?
       displayName
+    end
+
+    def members_param
+      members = params.dig("Operations", 0, "value", "members")
+      raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if members.nil?
+      members
     end
   end
 end

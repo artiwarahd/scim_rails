@@ -432,6 +432,125 @@ RSpec.describe ScimRails::ScimGroupsController, type: :controller do
     end
   end
 
+  describe "patch add members" do
+    let(:company) { create(:company) }
+
+    context "when unauthorized" do
+      it "returns scim+json content type" do
+        patch :patch_update, params: add_members_params(id: 1)
+
+        expect(response.content_type).to eq "application/scim+json"
+      end
+
+      it "fails with no credentials" do
+        patch :patch_update, params: add_members_params(id: 1)
+
+        expect(response.status).to eq 401
+      end
+
+      it "fails with invalid credentials" do
+        request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials("unauthorized","123456")
+
+        patch :patch_update, params: add_members_params(id: 1)
+
+        expect(response.status).to eq 401
+      end
+    end
+
+    context "when authorized" do
+      let!(:group) { create(:group, id: 1, company: company) }
+      let!(:user_1) { create(:user, id: 1, company: company) }
+      let!(:user_2) { create(:user, id: 2, company: company) }
+
+      before :each do
+        http_login(company)
+      end
+
+      it "returns scim+json content type" do
+        patch :patch_update, params: add_members_params(id: 1)
+
+        expect(response.content_type).to eq "application/scim+json"
+      end
+
+      it "is successful with valid credentials" do
+        patch :patch_update, params: add_members_params(id: 1)
+
+        expect(response.status).to eq 200
+      end
+
+      it "returns :not_found for id that cannot be found" do
+        get :patch_update, params: add_members_params(id: "fake_id")
+
+        expect(response.status).to eq 404
+      end
+
+      it "returns :not_found for a correct id but unauthorized company" do
+        new_company = create(:company)
+        create(:group, company: new_company, id: 1000)
+
+        get :patch_update, params: add_members_params(id: 1000)
+
+        expect(response.status).to eq 404
+      end
+
+      it "successfully update group [Add members]" do
+        expect(company.groups.count).to eq 1
+        group = company.groups.first
+
+        patch :patch_update, params: add_members_params(id: 1, members: [user_1.id])
+
+        expect(response.status).to eq 200
+        group.reload
+        expect(group.users.count).to eq 1
+        expect(group.users).to include user_1
+      end
+
+      it "successfully update group [Add members]" do
+        expect(company.groups.count).to eq 1
+        group = company.groups.first
+        group.users = [user_1]
+
+        patch :patch_update, params: add_members_params(id: 1, members: [user_2.id])
+
+        expect(response.status).to eq 200
+        group.reload
+        expect(group.users.count).to eq 2
+        expect(group.users).to include(user_1, user_2)
+      end
+
+      it "do nothing if try to add existing user to the group" do
+        expect(company.groups.count).to eq 1
+        group = company.groups.first
+        group.users = [user_1]
+
+        patch :patch_update, params: add_members_params(id: 1, members: [user_1.id])
+
+        expect(response.status).to eq 200
+        group.reload
+        expect(group.users.count).to eq 1
+        expect(group.users).to include(user_1)
+      end
+
+      it "throws an error for non status updates" do
+        patch :patch_update, params: {
+          id: 1,
+          Operations: [
+            {
+              op: "add",
+              value: {
+                id: 123123
+              }
+            }
+          ]
+        }
+
+        expect(response.status).to eq 422
+        response_body = JSON.parse(response.body)
+        expect(response_body.dig("schemas", 0)).to eq "urn:ietf:params:scim:api:messages:2.0:Error"
+      end
+    end
+  end
+
   def patch_params(id:, displayName: "Default")
     {
       id: id,
@@ -440,6 +559,34 @@ RSpec.describe ScimRails::ScimGroupsController, type: :controller do
           op: "replace",
           value: {
             displayName: displayName
+          }
+        }
+      ]
+    }
+  end
+
+  def add_members_params(id:, members: [1])
+    {
+      id: id,
+      Operations: [
+        {
+          op: "add",
+          value: {
+            members: members
+          }
+        }
+      ]
+    }
+  end
+
+  def remove_members_params(id:, members: [1])
+    {
+      id: id,
+      Operations: [
+        {
+          op: "remove",
+          value: {
+            members: members
           }
         }
       ]
