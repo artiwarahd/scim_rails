@@ -54,20 +54,28 @@ end
 
 This will enable the following routes for the Gem to use:
 
-| Request | Route               |
-|:-------:|:-------------------:|
-| get     | 'scim/v2/Users'     |
-| post    | 'scim/v2/Users'     |
-| get     | 'scim/v2/Users/:id' |
-| put     | 'scim/v2/Users/:id' |
-| patch   | 'scim/v2/Users/:id' |
+| Request | Route                |
+|:-------:|:--------------------:|
+| get     | 'scim/v2/Users'      |
+| post    | 'scim/v2/Users'      |
+| get     | 'scim/v2/Users/:id'  |
+| put     | 'scim/v2/Users/:id'  |
+| patch   | 'scim/v2/Users/:id'  |
+| get     | 'scim/v2/Groups'     |
+| post    | 'scim/v2/Groups'     |
+| get     | 'scim/v2/Groups/:id' |
+| put     | 'scim/v2/Groups/:id' |
+| patch   | 'scim/v2/Groups/:id' |
 
 Note: This Gem can be mounted to any path. For example:
 
 ```
 https://scim.example.com/scim/v2/Users
+https://scim.example.com/scim/v2/Groups
 https://www.example.com/scim/v2/Users
+https://www.example.com/scim/v2/Groups
 https://example.com/example/scim/v2/Users
+https://example.com/example/scim/v2/Groups
 ```
 
 ## Usage
