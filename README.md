@@ -10,6 +10,19 @@ To learn more about SCIM 2.0 you can read the documentation at [RFC 7643](https:
 
 The goal of the Gem is to offer a relatively painless way of adding SCIM 2.0 to your app. This Gem should be fully compatible with Okta's SCIM implementation. This project is ongoing and will hopefully be fully SCIM compliant in time. Pull requests that assist in meeting that goal are welcome!
 
+
+## Project status
+1. Fork `scim_rails` gem
+2. Add Group Operations
+  * Create Group
+  * Get Group
+  * Get Group by displayName
+  * Update Group [Non-member attributes] << we're on this step
+  * Update Group [Add Members]
+  * Update Group [Remove Members]
+  * Delete Group
+3. Update to support Microsoft Azure Active Directory interface
+
 ## Installation
 
 Add this line to your application's Gemfile:
