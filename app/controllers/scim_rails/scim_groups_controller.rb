@@ -48,9 +48,13 @@ module ScimRails
       json_scim_response(object: group)
     end
 
-    # TODO: PATCH will only add or remove users form group.
+    # PATCH update:
+    # - Update Group [Non-member attributes]
+    # - Update Group [Add Members]
+    # - Update Group [Remove Members]
     def patch_update
       group = @company.public_send(ScimRails.config.scim_groups_scope).find(params[:id])
+      update_display_name(group) if patch_display_name_param.present?
       json_scim_response(object: group)
     end
 
@@ -94,10 +98,14 @@ module ScimRails
       end
     end
 
-    def patch_active_param
-      active = params.dig("Operations", 0, "value", "active")
-      raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if active.nil?
-      active
+    def update_display_name(group)
+      group.update!(display_name: patch_display_name_param)
+    end
+
+    def patch_display_name_param
+      displayName = params.dig("Operations", 0, "value", "displayName")
+      raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if displayName.nil?
+      displayName
     end
   end
 end

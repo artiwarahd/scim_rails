@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scim_rails (0.2.0)
+    scim_rails (0.3.0)
       rails (~> 5.0)
 
 GEM
@@ -159,4 +159,4 @@ RUBY VERSION
    ruby 2.4.4p296
 
 BUNDLED WITH
-   2.0.1
+   2.0.2

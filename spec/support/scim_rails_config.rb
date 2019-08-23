@@ -60,8 +60,8 @@ ScimRails.configure do |config|
   config.scim_groups_scope = :groups
   config.scim_groups_list_order = :id
 
-  config.group_deprovision_method = :archive!
-  config.group_reprovision_method = :unarchive!
+  config.group_add_members_method = :add_members!
+  config.group_remove_members_method = :remove_members!
 
   config.mutable_group_attributes = [
     :display_name

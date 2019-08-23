@@ -31,8 +31,8 @@ module ScimRails
       :scim_groups_model,
       :scim_groups_scope,
       :group_attributes,
-      :group_deprovision_method,
-      :group_reprovision_method,
+      :group_add_members_method,
+      :group_remove_members_method,
       :group_schema
       
     def initialize

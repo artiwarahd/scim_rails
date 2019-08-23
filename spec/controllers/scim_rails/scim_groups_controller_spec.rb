@@ -306,6 +306,14 @@ RSpec.describe ScimRails::ScimGroupsController, type: :controller do
         expect(response.status).to eq 200
       end
 
+      it "update group display name" do
+        request.content_type = "application/scim+json"
+        put :put_update, params: put_params(displayName: "New Display Name")
+
+        expect(response.status).to eq 200
+        expect(group.reload.display_name).to eq "New Display Name"
+      end
+
       it "returns :not_found for id that cannot be found" do
         get :put_update, params: { id: "fake_id" }
 
@@ -333,10 +341,115 @@ RSpec.describe ScimRails::ScimGroupsController, type: :controller do
     end
   end
 
-  def put_params(active: true)
+  describe "patch update" do
+    let(:company) { create(:company) }
+
+    context "when unauthorized" do
+      it "returns scim+json content type" do
+        patch :patch_update, params: patch_params(id: 1)
+
+        expect(response.content_type).to eq "application/scim+json"
+      end
+
+      it "fails with no credentials" do
+        patch :patch_update, params: patch_params(id: 1)
+
+        expect(response.status).to eq 401
+      end
+
+      it "fails with invalid credentials" do
+        request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials("unauthorized","123456")
+
+        patch :patch_update, params: patch_params(id: 1)
+
+        expect(response.status).to eq 401
+      end
+    end
+
+    context "when authorized" do
+      let!(:group) { create(:group, id: 1, company: company) }
+
+      before :each do
+        http_login(company)
+      end
+
+      it "returns scim+json content type" do
+        patch :patch_update, params: patch_params(id: 1)
+
+        expect(response.content_type).to eq "application/scim+json"
+      end
+
+      it "is successful with valid credentials" do
+        patch :patch_update, params: patch_params(id: 1)
+
+        expect(response.status).to eq 200
+      end
+
+      it "returns :not_found for id that cannot be found" do
+        get :patch_update, params: patch_params(id: "fake_id")
+
+        expect(response.status).to eq 404
+      end
+
+      it "returns :not_found for a correct id but unauthorized company" do
+        new_company = create(:company)
+        create(:group, company: new_company, id: 1000)
+
+        get :patch_update, params: patch_params(id: 1000)
+
+        expect(response.status).to eq 404
+      end
+
+      it "successfully update group [Non-member attributes]" do
+        expect(company.groups.count).to eq 1
+        group = company.groups.first
+
+        patch :patch_update, params: patch_params(id: 1, displayName: "New Display Name")
+
+        expect(response.status).to eq 200
+        expect(company.groups.count).to eq 1
+        group.reload
+        expect(group.display_name).to eq "New Display Name"
+      end
+
+      it "throws an error for non status updates" do
+        patch :patch_update, params: {
+          id: 1,
+          Operations: [
+            {
+              op: "replace",
+              value: {
+                id: 123123
+              }
+            }
+          ]
+        }
+
+        expect(response.status).to eq 422
+        response_body = JSON.parse(response.body)
+        expect(response_body.dig("schemas", 0)).to eq "urn:ietf:params:scim:api:messages:2.0:Error"
+      end
+    end
+  end
+
+  def patch_params(id:, displayName: "Default")
+    {
+      id: id,
+      Operations: [
+        {
+          op: "replace",
+          value: {
+            displayName: displayName
+          }
+        }
+      ]
+    }
+  end
+
+  def put_params(displayName: "Default")
     {
       id: 1,
-      displayName: "Test Group"
+      displayName: displayName
     }
   end
 end
