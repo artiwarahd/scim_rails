@@ -116,7 +116,7 @@ module ScimRails
     end
 
     def remove_members(group)
-      group.public_send(ScimRails.config.group_add_members_method, members_param)
+      group.public_send(ScimRails.config.group_remove_members_method, members_param)
     end
 
     def patch_operation

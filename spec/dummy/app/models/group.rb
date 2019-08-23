@@ -18,6 +18,6 @@ class Group < ApplicationRecord
   end
 
   def remove_members!(member_ids)
-    # self.users = self.users - User.find(member_ids)
+    self.users = self.users - User.find(member_ids)
   end
 end
