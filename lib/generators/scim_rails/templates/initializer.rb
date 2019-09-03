@@ -113,5 +113,6 @@ ScimRails.configure do |config|
     schemas: ["urn:ietf:params:scim:schemas:core:2.0:Group"],
     id: :id,
     displayName: :display_name,
+    members: :members
   }
 end

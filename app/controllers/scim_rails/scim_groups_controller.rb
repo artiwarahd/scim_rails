@@ -55,7 +55,7 @@ module ScimRails
     def patch_update
       group = @company.public_send(ScimRails.config.scim_groups_scope).find(params[:id])
 
-      case patch_operation
+      case patch_operation.downcase
       when "replace"
         update_display_name(group) if patch_display_name_param.present?
       when "add"
