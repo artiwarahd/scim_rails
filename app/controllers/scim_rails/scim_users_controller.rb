@@ -122,7 +122,7 @@ module ScimRails
     end
 
     def patch_active_param
-      active = (params.dig("Operations", 0, "value", "active") rescue nil)
+      active = params.dig("Operations", 0, "value", "active")
       raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if active.nil?
       active
     end

@@ -131,13 +131,13 @@ module ScimRails
     end
 
     def patch_display_name_param
-      displayName = (params.dig("Operations", 0, "value", "displayName") rescue nil)
+      displayName = params.dig("Operations", 0, "value", "displayName")
       raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if displayName.nil?
       displayName
     end
 
     def members_param
-      members = (params.dig("Operations", 0, "value") rescue []).map{|v| v["value"] }
+      members = params.dig("Operations", 0, "value").map{|v| v["value"] }
       raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if members.nil?
       members
     end
