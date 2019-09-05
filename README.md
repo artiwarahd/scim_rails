@@ -23,8 +23,7 @@ The goal of the Gem is to offer a relatively painless way of adding SCIM 2.0 to 
   * Delete Group
 3. Support Microsoft Azure Active Directory Interface
   * Support OAuth bearer token authentication
-  * Support Azure AD provisioning basic schema
-  * Support Azure AD provisioning all schema **<< we're on this step**
+  * Support Azure AD provisioning schema **<< we're on this step**
 
 ## Installation
 
