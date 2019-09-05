@@ -539,14 +539,14 @@ RSpec.describe ScimRails::ScimGroupsController, type: :controller do
           Operations: [
             {
               op: "add",
-              value: {
-                id: 123123
-              }
+              value: [
+                { value: nil }
+              ]
             }
           ]
         }
 
-        expect(response.status).to eq 422
+        expect(response.status).to eq 404
         response_body = JSON.parse(response.body)
         expect(response_body.dig("schemas", 0)).to eq "urn:ietf:params:scim:api:messages:2.0:Error"
       end
@@ -660,14 +660,14 @@ RSpec.describe ScimRails::ScimGroupsController, type: :controller do
           Operations: [
             {
               op: "remove",
-              value: {
-                id: 123123
-              }
+              value: [
+                { value: nil }
+              ]
             }
           ]
         }
 
-        expect(response.status).to eq 422
+        expect(response.status).to eq 404
         response_body = JSON.parse(response.body)
         expect(response_body.dig("schemas", 0)).to eq "urn:ietf:params:scim:api:messages:2.0:Error"
       end
@@ -743,9 +743,9 @@ RSpec.describe ScimRails::ScimGroupsController, type: :controller do
       Operations: [
         {
           op: "add",
-          value: {
-            members: members
-          }
+          value: [
+            { value: members }
+          ]
         }
       ]
     }
@@ -757,9 +757,9 @@ RSpec.describe ScimRails::ScimGroupsController, type: :controller do
       Operations: [
         {
           op: "remove",
-          value: {
-            members: members
-          }
+          value: [
+            { value: members }
+          ]
         }
       ]
     }

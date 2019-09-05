@@ -11,9 +11,9 @@ module ScimRails
     private
 
     def authorize_request
-      if request.headers['Authorization'].include?("Bearer")
+      if request.headers['Authorization'].present? && request.headers['Authorization'].include?("Bearer")
         oauth_authorize
-      elsif request.headers['Authorization'].include?("Basic")
+      else
         basic_auth_authorize
       end
 
