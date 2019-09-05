@@ -137,7 +137,7 @@ module ScimRails
     end
 
     def members_param
-      members = (params.dig("Operations", 0, "value", "members") rescue nil)
+      members = (params.dig("Operations", 0, "value") rescue []).map{|v| v["value"] }
       raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if members.nil?
       members
     end
