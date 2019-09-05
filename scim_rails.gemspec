@@ -18,8 +18,10 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = "~> 2.4"
   s.add_dependency "rails", "~> 5.0"
+  s.add_runtime_dependency "jwt", "~> 2.2"
 
   s.test_files = Dir["spec/**/*"]
+
 
   s.add_development_dependency "bundler", "~> 2.0"
   s.add_development_dependency "factory_bot_rails"
