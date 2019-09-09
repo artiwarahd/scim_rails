@@ -10,11 +10,11 @@ module ScimRails
             "#{ScimRails.config.scim_groups_model.connection.quote_column_name(query.attribute)} #{query.operator} ?",
             query.parameter
           )
-          .order(ScimRails.config.scim_groups_list_order)
+          .order_by(ScimRails.config.scim_groups_list_order)
       else
         groups = @company
           .public_send(ScimRails.config.scim_groups_scope)
-          .order(ScimRails.config.scim_groups_list_order)
+          .order_by(ScimRails.config.scim_groups_list_order)
       end
 
       counts = ScimCount.new(

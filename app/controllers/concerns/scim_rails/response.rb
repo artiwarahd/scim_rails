@@ -33,7 +33,7 @@ module ScimRails
 
     def list_response(object, counts)
       object = object
-        .order(:id)
+        .order_by(created_at: :asc)
         .offset(counts.offset)
         .limit(counts.limit)
       {

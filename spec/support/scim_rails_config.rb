@@ -10,7 +10,7 @@ ScimRails.configure do |config|
 
   ### ---------- Users ---------- ###
   config.scim_users_scope = :users
-  config.scim_users_list_order = :id
+  config.scim_users_list_order = { created_at: :asc }
 
   config.user_deprovision_method = :archive!
   config.user_reprovision_method = :unarchive!
@@ -58,7 +58,7 @@ ScimRails.configure do |config|
 
   ### ---------- Groups ---------- ###
   config.scim_groups_scope = :groups
-  config.scim_groups_list_order = :id
+  config.scim_groups_list_order = { created_at: :asc }
 
   config.group_add_members_method = :add_members!
   config.group_remove_members_method = :remove_members!
