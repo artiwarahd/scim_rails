@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scim_rails (0.3.6)
+    scim_rails (0.3.7)
       jwt (~> 2.2)
       rails (~> 5.0)
 
