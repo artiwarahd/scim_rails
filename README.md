@@ -33,6 +33,7 @@ gem 'scim_rails', git: 'https://github.com/iwalabs/scim_rails.git'
 ```
 
 For Postgresql and Sqlite users please use version 0.3.x
+
 For MongoDB user please use version 0.4.x
 
 And then execute:
