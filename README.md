@@ -27,10 +27,16 @@ The goal of the Gem is to offer a relatively painless way of adding SCIM 2.0 to 
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
+For Postgresql and Sqlite users:
 ```ruby
-gem 'scim_rails'
+# Gemfile
+gem 'scim_rails', '~> 0.3'
+```
+
+For MongoDB users:
+```ruby
+# Gemfile
+gem 'scim_rails', '~> 0.4'
 ```
 
 And then execute:
