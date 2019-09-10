@@ -54,7 +54,8 @@ module ScimRails
     # This will work just fine for Okta but is not SCIM compliant.
     def patch_update
       user = @company.public_send(ScimRails.config.scim_users_scope).find(params[:id])
-      update_status(user)
+      update_status(user) unless patch_active_param.nil?
+      user.update!(permitted_patch_user_params)
       json_scim_response(object: user)
     end
 
@@ -63,6 +64,18 @@ module ScimRails
     def permitted_user_params
       ScimRails.config.mutable_user_attributes.each.with_object({}) do |attribute, hash|
         hash[attribute] = find_value_for(attribute)
+      end
+    end
+
+    def permitted_patch_user_params
+      operations_data = params.to_unsafe_h[:Operations]
+
+      ScimRails.config.mutable_user_attributes.each.with_object({}) do |attribute, hash|
+        path = path_for(attribute).map(&:to_s).join(".")
+        operation_data = operations_data.detect{|operation| operation["path"] == path }
+
+        next if operation_data.blank?
+        hash[attribute] = operation_data["value"]
       end
     end
 
@@ -122,9 +135,7 @@ module ScimRails
     end
 
     def patch_active_param
-      active = params.dig("Operations", 0, "value", "active")
-      raise ScimRails::ExceptionHandler::UnsupportedPatchRequest if active.nil?
-      active
+      active = (params.dig("Operations", 0, "value", "active") rescue nil)
     end
   end
 end
