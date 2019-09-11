@@ -22,8 +22,7 @@ module ScimRails
 
     def oauth_authorize
       token = request.headers['Authorization'].split(' ').last
-
-      authorization_data = JWT.decode(token, nil, false).first.deep_symbolize_keys
+      authorization_data = JWT.decode(token, ENV["HMAC_SECRET"], true, { algorithm: ENV["HMAC_ALGORITHM"] }).first.deep_symbolize_keys
 
       authorization = AuthorizeApiRequest.new(
         searchable_attribute: authorization_data[:subdomain],
