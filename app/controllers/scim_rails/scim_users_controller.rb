@@ -2,7 +2,8 @@ module ScimRails
   class ScimUsersController < ScimRails::ApplicationController
     def index
       if params[:filter].present?
-        query = ScimRails::ScimQueryParser.new("User", params[:filter])
+        filter_string = params[:filter].gsub(/\[.*\]\.value/, "");
+        query = ScimRails::ScimQueryParser.new("User", filter_string)
 
         users = @company
           .public_send(ScimRails.config.scim_users_scope)
