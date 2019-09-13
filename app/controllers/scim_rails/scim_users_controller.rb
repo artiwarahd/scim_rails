@@ -1,5 +1,12 @@
 module ScimRails
   class ScimUsersController < ScimRails::ApplicationController
+
+    before_action :mapping_params
+
+    def mapping_params
+      params[:userName] = params.to_unsafe_h[:emails][0]["value"] if params[:emails].present?
+    end
+
     def index
       if params[:filter].present?
         filter_string = params[:filter].gsub(/\[.*\]\.value/, "");
