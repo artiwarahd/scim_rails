@@ -9,16 +9,16 @@ module ScimRails
         content_type: CONTENT_TYPE
     end
 
-    def json_scim_response(object:, status: :ok, counts: nil)
+    def json_scim_response(object:, status: :ok, counts: nil, excluded_attributes: nil)
       case params[:action]
       when "index"
         render \
-          json: list_response(object, counts),
+          json: list_response(object, counts, excluded_attributes),
           status: status,
           content_type: CONTENT_TYPE
       when "show", "create", "put_update", "patch_update"
         render \
-          json: object_response(object),
+          json: object_response(object, excluded_attributes),
           status: status,
           content_type: CONTENT_TYPE
       when "destroy"
@@ -31,7 +31,7 @@ module ScimRails
 
     private
 
-    def list_response(object, counts)
+    def list_response(object, counts, excluded_attributes)
       object = object
         .order_by(created_at: :asc)
         .offset(counts.offset)
@@ -43,23 +43,25 @@ module ScimRails
         "totalResults": counts.total,
         "startIndex": counts.start_index,
         "itemsPerPage": counts.limit,
-        "Resources": list_objects(object)
+        "Resources": list_objects(object, excluded_attributes)
       }
     end
 
-    def list_objects(records)
+    def list_objects(records, excluded_attributes)
       records.map do |record|
-        object_response(record)
+        object_response(record, excluded_attributes)
       end
     end
 
-    def object_response(object)
+    def object_response(object, excluded_attributes)
       case object.class.name
       when "User"
-        schema = ScimRails.config.user_schema
+        schema = ScimRails.config.user_schema.clone
       when "Group"
-        schema = ScimRails.config.group_schema
+        schema = ScimRails.config.group_schema.clone
       end
+
+      schema.delete(excluded_attributes.to_sym) if excluded_attributes.present?
 
       find_value(object, schema)
     end

@@ -22,7 +22,9 @@ module ScimRails
         total: groups.count
       )
 
-      json_scim_response(object: groups, counts: counts)
+      excluded_attributes = params[:excludedAttributes]
+
+      json_scim_response(object: groups, counts: counts, excluded_attributes: excluded_attributes)
     end
 
     def create
@@ -38,7 +40,10 @@ module ScimRails
 
     def show
       group = @company.public_send(ScimRails.config.scim_groups_scope).find(params[:id])
-      json_scim_response(object: group)
+
+      excluded_attributes = params[:excludedAttributes]
+      
+      json_scim_response(object: group, excluded_attributes: excluded_attributes)
     end
 
     def put_update
