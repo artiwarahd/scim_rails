@@ -59,13 +59,15 @@ module ScimRails
     def patch_update
       group = @company.public_send(ScimRails.config.scim_groups_scope).find(params[:id])
 
-      case patch_operation.downcase
-      when "replace"
-        update_display_name(group) if patch_display_name_param.present?
-      when "add"
-        add_members(group) if members_param.present?
-      when "remove"
-        remove_members(group) if members_param.present?
+      if patch_path == :members
+        case patch_operation.downcase
+        when "add"
+          add_members(group) if members_param.present?
+        when "remove"
+          remove_members(group) if members_param.present?
+        end
+      else
+        update_attribute(group)
       end
 
       json_scim_response(object: group)
@@ -118,8 +120,8 @@ module ScimRails
       end
     end
 
-    def update_display_name(group)
-      group.update!(display_name: patch_display_name_param)
+    def update_attribute(group)
+      group.update!(patch_path.to_sym => patch_value)
     end
 
     def add_members(group)
@@ -132,6 +134,24 @@ module ScimRails
 
     def patch_operation
       operation = params.dig("Operations", 0, "op")
+    end
+
+    def patch_path(object = ScimRails.config.mutable_group_attributes_schema)
+      path = params.dig("Operations", 0, "path")
+      path = object[path.to_sym]
+    end
+
+    def patch_value
+      value = params.dig("Operations", 0, "value")
+
+      case value
+      when Hash
+        value = value[:value]
+      when Array
+        value = value.first[:value]
+      end
+
+      return value
     end
 
     def patch_display_name_param
