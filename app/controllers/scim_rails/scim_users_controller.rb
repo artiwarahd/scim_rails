@@ -82,7 +82,17 @@ module ScimRails
         operation_data = operations_data.detect{|operation| operation["path"] == path }
 
         next if operation_data.blank?
-        hash[attribute] = operation_data["value"]
+
+        value = operation_data["value"]
+
+        case value
+        when Hash
+          value = value["value"]
+        when Array
+          value = value[0]["value"]
+        end
+
+        hash[attribute] = value
       end
     end
 
