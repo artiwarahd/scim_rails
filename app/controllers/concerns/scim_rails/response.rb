@@ -10,7 +10,7 @@ module ScimRails
     end
 
     def json_scim_response(object:, status: :ok, counts: nil, excluded_attributes: nil)
-      render json: json_scim_not_found_response, status: :not_found and return if object.blank?
+      render json: json_scim_not_found_response, status: :not_found and return if object.blank? && params[:action] != "index"
 
       case params[:action]
       when "index"
