@@ -10,6 +10,8 @@ module ScimRails
     end
 
     def json_scim_response(object:, status: :ok, counts: nil, excluded_attributes: nil)
+      render json: json_scim_not_found_response, status: :not_found and return if object.blank?
+
       case params[:action]
       when "index"
         render \
@@ -44,6 +46,15 @@ module ScimRails
         "startIndex": counts.start_index,
         "itemsPerPage": counts.limit,
         "Resources": list_objects(object, excluded_attributes)
+      }
+    end
+
+    def json_scim_not_found_response
+      {
+        "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:Error"
+        ],
+        "status": "404"
       }
     end
 
