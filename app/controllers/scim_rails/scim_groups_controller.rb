@@ -59,6 +59,8 @@ module ScimRails
     def patch_update
       group = @company.public_send(ScimRails.config.scim_groups_scope).find(params[:id])
 
+      json_scim_missing_field_response(params) and return if patch_path.blank?
+
       if patch_path == :members
         case patch_operation.downcase
         when "add"

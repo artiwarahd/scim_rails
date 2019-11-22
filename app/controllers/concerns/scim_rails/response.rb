@@ -31,6 +31,15 @@ module ScimRails
       end
     end
 
+    def json_scim_missing_field_response(params)
+      field = params.dig("Operations", 0, "path")
+
+      render \
+        json: unprocessable_entity_response("#{field} field cannot be found in the system."),
+        status: status,
+        content_type: CONTENT_TYPE
+    end
+
     private
 
     def list_response(object, counts, excluded_attributes)
@@ -55,6 +64,16 @@ module ScimRails
             "urn:ietf:params:scim:api:messages:2.0:Error"
         ],
         "status": "404"
+      }
+    end
+
+    def unprocessable_entity_response(detail)
+      {
+        "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:Error"
+        ],
+        "status": "422",
+        "detail": detail
       }
     end
 
